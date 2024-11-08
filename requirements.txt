@@ -26,4 +26,4 @@ jupyter==1.0.0
 ipykernel==6.29.3
 
 # Production deployment
-gunicorn==21.2.0
+gunicorn==22.0.0
