@@ -169,7 +169,12 @@ Replace `AAPL` with the ticker symbol of the stock you wish to analyze.
 1. **Run the Flask App**
 
    ```bash
-   python web_app.py
+   python app.py
+   ```
+   If you want to serve the app as an API for programmatic interaction:
+
+   ```bash
+   python api.py
    ```
 
 2. **Access the Application**
