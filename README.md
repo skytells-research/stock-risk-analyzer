@@ -21,6 +21,7 @@ Stock Risk Analyzer is a powerful, machine learning-driven application designed 
 - [Usage](#usage)
   - [Command-Line Interface (CLI)](#command-line-interface-cli)
   - [Web Application](#web-application)
+  - [REST API](#rest-api)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
@@ -169,6 +170,90 @@ Replace `AAPL` with the ticker symbol of the stock you wish to analyze.
 
    - Enter the stock ticker symbol in the input field.
    - Click "Analyze" to view the risk assessment.
+
+### REST API
+
+The Stock Risk Analyzer provides a RESTful API for programmatic access to risk analysis features.
+
+#### Base URL
+```
+http://localhost:5000/api/v1
+```
+
+#### Endpoints
+
+1. **Analyze Stock Risk**
+```http
+GET /analyze/{ticker}
+```
+- Parameters:
+  - `ticker` (path): Stock ticker symbol (e.g., AAPL, GOOGL)
+- Response:
+```json
+{
+    "ticker": "AAPL",
+    "risk_level": "Medium",
+    "confidence": 0.85,
+    "indicators": {
+        "volatility": 0.23,
+        "rsi": 65.4,
+        "ma50": 150.25,
+        "ma200": 145.80
+    },
+    "last_updated": "2024-03-21T15:30:00Z"
+}
+```
+
+2. **Batch Analysis**
+```http
+POST /analyze/batch
+```
+- Request Body:
+```json
+{
+    "tickers": ["AAPL", "GOOGL", "MSFT"]
+}
+```
+- Response: Array of analysis results for each ticker
+
+#### Authentication
+API requests require an API key passed in the header:
+```http
+Authorization: Bearer your_api_key_here
+```
+
+#### Rate Limits
+- Free tier: 100 requests/day
+- Premium tier: 1000 requests/day
+
+#### Example Usage
+
+Using Python with requests:
+```python
+import requests
+
+API_KEY = 'your_api_key_here'
+BASE_URL = 'http://localhost:5000/api/v1'
+
+headers = {
+    'Authorization': f'Bearer {API_KEY}'
+}
+
+# Analyze single stock
+response = requests.get(
+    f'{BASE_URL}/analyze/AAPL',
+    headers=headers
+)
+print(response.json())
+
+# Batch analysis
+response = requests.post(
+    f'{BASE_URL}/analyze/batch',
+    headers=headers,
+    json={'tickers': ['AAPL', 'GOOGL', 'MSFT']}
+)
+print(response.json())
+```
 
 ## Contributing
 

@@ -1,0 +1,81 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Stock Analysis API",
+    "description": "API for analyzing stock market data and risk assessment",
+    "version": "1.0.0"
+  },
+  "basePath": "/api",
+  "schemes": ["http", "https"],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter your bearer token in the format **Bearer <token>**"
+    }
+  },
+  "paths": {
+    "/auth/token": {
+      "post": {
+        "summary": "Get authentication token",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Basic auth credentials",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully generated token"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/v1/analyze/{ticker}": {
+      "get": {
+        "summary": "Analyze stock data",
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Stock ticker symbol (e.g., AAPL)"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Successful analysis"
+          },
+          "400": {
+            "description": "Invalid request or analysis error"
+          },
+          "401": {
+            "description": "Authentication error"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "API health check",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "API status"
+          }
+        }
+      }
+    }
+  }
+} 
