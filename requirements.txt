@@ -14,7 +14,7 @@ pytz==2024.1
 # Web dependencies
 Werkzeug==3.0.6
 requests==2.31.0
-urllib3==2.2.1
+urllib3==2.2.2
 
 # Development and testing
 pytest==8.0.2
