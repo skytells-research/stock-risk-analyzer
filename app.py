@@ -52,8 +52,9 @@ def analyze():
         })
     except Exception as e:
         import traceback
-        print(traceback.format_exc())  # This will print the full error in your console
-        return jsonify({'error': str(e)}), 400
+        import logging
+        logging.error(traceback.format_exc())  # Log the full error on the server
+        return jsonify({'error': 'An internal error has occurred.'}), 400
 
 @app.route('/api/analyze/<ticker>', methods=['GET'])
 def analyze_api(ticker):
@@ -92,8 +93,11 @@ def analyze_api(ticker):
         
         return jsonify(response)
     except Exception as e:
+        import traceback
+        import logging
+        logging.error(traceback.format_exc())  # Log the full error on the server
         return jsonify({
-            'error': str(e),
+            'error': 'An internal error has occurred.',
             'ticker': ticker.upper()
         }), 400
 
