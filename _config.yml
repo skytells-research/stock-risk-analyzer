@@ -1,0 +1,18 @@
+theme: jekyll-theme-minimal
+title: Stock Risk Analyzer
+description: A machine learning-powered tool for analyzing stock market risk levels using technical indicators and historical data. Built with Python and Flask, this open-source project helps investors make informed decisions by classifying stocks into risk categories (Low, Medium, High) using advanced ML techniques and real-time market data.
+
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+- jekyll-remote-theme
+
+# Additional metadata
+show_downloads: true
+github:
+  repository_url: https://github.com/skytells-research/stock-risk-analyzer
+  zip_url: https://github.com/skytells-research/stock-risk-analyzer/archive/refs/heads/main.zip
+  tar_url: https://github.com/skytells-research/stock-risk-analyzer/archive/refs/heads/main.tar.gz
+
+# Optional social links
+social:
+  github: skytells-research
