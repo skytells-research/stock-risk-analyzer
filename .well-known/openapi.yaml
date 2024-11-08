@@ -1,0 +1,99 @@
+openapi: 3.0.1
+info:
+  title: Stock Risk Analyzer API
+  description: API for analyzing stock market risk using machine learning
+  version: 1.0.0
+servers:
+  - url: https://your-domain.com/api/v1
+paths:
+  /analyze/{ticker}:
+    get:
+      operationId: analyzeStock
+      summary: Analyze risk level for a single stock
+      parameters:
+        - in: path
+          name: ticker
+          schema:
+            type: string
+          required: true
+          description: Stock ticker symbol (e.g., AAPL)
+      responses:
+        '200':
+          description: Successful risk analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskAnalysis'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Stock not found
+  /analyze/batch:
+    post:
+      operationId: analyzeBatchStocks
+      summary: Analyze risk levels for multiple stocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tickers:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of stock ticker symbols
+      responses:
+        '200':
+          description: Successful batch analysis
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RiskAnalysis'
+        '401':
+          description: Unauthorized
+
+components:
+  schemas:
+    RiskAnalysis:
+      type: object
+      properties:
+        ticker:
+          type: string
+          description: Stock ticker symbol
+        risk_level:
+          type: string
+          enum: [Low, Medium, High]
+          description: Assessed risk level
+        confidence:
+          type: number
+          format: float
+          description: Confidence score of the risk assessment
+        indicators:
+          type: object
+          properties:
+            volatility:
+              type: number
+              format: float
+            rsi:
+              type: number
+              format: float
+            ma50:
+              type: number
+              format: float
+            ma200:
+              type: number
+              format: float
+        last_updated:
+          type: string
+          format: date-time
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - BearerAuth: [] 

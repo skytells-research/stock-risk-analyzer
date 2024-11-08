@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Stock Risk Analyzer",
+  "name_for_model": "stock_risk_analyzer",
+  "description_for_human": "Analyze stock market risk levels using machine learning. Get risk assessments and technical indicators for any stock.",
+  "description_for_model": "Plugin for analyzing stock market risk using machine learning. Provides risk levels (Low, Medium, High) and technical indicators. Use this to help assess investment risks and make informed trading decisions.",
+  "auth": {
+    "type": "bearer"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://your-domain.com/.well-known/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://your-domain.com/static/assets/logo.png",
+  "contact_email": "support@your-domain.com",
+  "legal_info_url": "https://your-domain.com/legal"
+} 

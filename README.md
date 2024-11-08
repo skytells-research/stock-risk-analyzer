@@ -101,6 +101,16 @@ By integrating technology and finance, **Stock Risk Analyzer** contributes to mo
 - **Machine Learning-Based Risk Classification**: Implements a Random Forest classifier to categorize stocks into Low, Medium, or High risk.
 - **Web Interface for Easy Interaction**: User-friendly web application built with Flask for seamless interaction.
 - **CLI Support for Automation**: Command-line interface for quick assessments and integration into automated workflows.
+- **RESTful API Integration**:
+  - Secure endpoints with bearer token authentication
+  - Single stock and batch analysis endpoints
+  - Rate-limited tiers for different usage levels
+  - Comprehensive API documentation
+- **OpenAI Plugin Support**:
+  - Native integration with ChatGPT
+  - Natural language processing for stock analysis
+  - Conversational interface for risk assessment
+  - Multi-stock comparison through chat
 - **Extensible Framework**: Modular code structure allowing easy addition of new features and indicators.
 
 ## Installation
