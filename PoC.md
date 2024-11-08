@@ -17,29 +17,28 @@ The system fetches historical stock data using the Yahoo Finance API, including:
 The risk analysis is based on several key technical indicators:
 
 1. **Daily Returns** ($R_t$):
-   ```latex
-   R_t = \frac{P_t - P_{t-1}}{P_{t-1}} \times 100
-   ```
+
+  $$R_t = \frac{P_t - P_{t-1}}{P_{t-1}} \times 100 $$
    where $P_t$ is the closing price at time t
 
-2. **Volatility** ($\sigma$):
-   ```latex
-   \sigma = \sqrt{\frac{\sum_{i=1}^{n}(R_i - \bar{R})^2}{n-1}} \times \sqrt{252}
-   ```
+3. **Volatility** ($\sigma$):
+
+   $$\sigma = \sqrt{\frac{\sum_{i=1}^{n}(R_i - \bar{R})^2}{n-1}} \times \sqrt{252}$$
+
    where:
    - $R_i$ is the daily return
    - $\bar{R}$ is the mean return
    - $n$ is the number of observations
    - $\sqrt{252}$ annualizes the volatility (252 trading days)
 
-3. **Moving Averages**:
-   - 50-day MA: $MA_{50} = \frac{1}{50}\sum_{i=t-49}^{t} P_i$
+4. **Moving Averages**:
+   - 50-day MA: $$MA_{50} = \frac{1}{50}\sum_{i=t-49}^{t} P_i$$
    - 200-day MA: $MA_{200} = \frac{1}{200}\sum_{i=t-199}^{t} P_i$
 
-4. **Relative Strength Index (RSI)**:
-   ```latex
-   RSI = 100 - \frac{100}{1 + RS}
-   ```
+5. **Relative Strength Index (RSI)**:
+
+   $$RSI = 100 - \frac{100}{1 + RS}$$
+
    where $RS = \frac{\text{Average Gain}}{\text{Average Loss}}$
 
 ### Risk Classification Algorithm
@@ -47,15 +46,15 @@ The risk analysis is based on several key technical indicators:
 The risk level is determined using a Random Forest Classifier with the following methodology:
 
 1. **Risk Score Calculation** ($\alpha$):
-   ```latex
-   \alpha = w_1\sigma + w_2|R_t| + w_3\left|\frac{P_t - MA_{50}}{MA_{50}}\right| + w_4\left|\frac{P_t - MA_{200}}{MA_{200}}\right|
-   ```
+
+   $$\alpha = w_1\sigma + w_2|R_t| + w_3\left|\frac{P_t - MA_{50}}{MA_{50}}\right| + w_4\left|\frac{P_t - MA_{200}}{MA_{200}}\right|$$
+   
    where $w_i$ are the learned weights
 
-2. **Risk Categories**:
-   - Low Risk: $\alpha < \theta_1$
-   - Medium Risk: $\theta_1 \leq \alpha < \theta_2$
-   - High Risk: $\alpha \geq \theta_2$
+3. **Risk Categories**:
+   - Low Risk: $$\alpha < \theta_1$$
+   - Medium Risk: $$\theta_1 \leq \alpha < \theta_2$$
+   - High Risk: $$\alpha \geq \theta_2$$
 
    where $\theta_1$ and $\theta_2$ are threshold values determined through model training
 
@@ -93,22 +92,16 @@ The Random Forest Classifier is trained on historical data with the following pa
 
 The model's performance is evaluated using the following metrics:
 
-### Accuracy
-```latex
-\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
-```
-### Precision
-```latex
-\text{Precision} = \frac{TP}{TP + FP}
-```
-### Recall
-```latex
-\text{Recall} = \frac{TP}{TP + FN}
-```
-### F1 Score
-```latex
-\text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
-```
+
+
+$$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$
+
+$$\text{Precision} = \frac{TP}{TP + FP}$$
+
+$$\text{Recall} = \frac{TP}{TP + FN}$$
+
+$$\text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
+
 
 
 Where:
