@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Analysis Result | Skytells Research</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --light-bg: #f3f4f6;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            max-width: 180px;
+            margin-bottom: 1rem;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .ticker-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .ticker-symbol {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .ticker-name {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            transition: transform 0.2s;
+        }
+
+        .metric-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .risk-level {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .risk-low { color: #22c55e; }
+        .risk-medium { color: #f59e0b; }
+        .risk-high { color: #dc2626; }
+
+        .chart-container {
+            margin: 2rem 0;
+            height: 300px;
+        }
+
+        .actions {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .disclaimer {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            font-size: 0.875rem;
+            color: #92400e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .ticker-symbol {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <img src="/assets/logo.png" alt="Skytells Research Logo" class="logo">
+        </header>
+
+        <div class="result-card">
+            <div class="ticker-info">
+                <div class="ticker-symbol">{{ ticker }}</div>
+                <div class="ticker-name">{{ company_name }}</div>
+            </div>
+
+            <div class="risk-level risk-{{ risk_level.lower() }}">
+                Risk Level: {{ risk_level }}
+                <i class="fas fa-circle-exclamation"></i>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Current Price</div>
+                    <div class="metric-value">${{ current_price }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Daily Return</div>
+                    <div class="metric-value">{{ daily_return }}%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Volatility</div>
+                    <div class="metric-value">{{ volatility }}%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Volume</div>
+                    <div class="metric-value">{{ volume }}</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <!-- Add your chart here using Chart.js or any other library -->
+            </div>
+
+            <div class="actions">
+                <a href="/" class="btn">
+                    <i class="fas fa-search"></i>
+                    Analyze Another Stock
+                </a>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This analysis is for educational and research purposes only. The information provided should not be considered as financial advice. Always conduct your own research and consult with a qualified financial advisor before making investment decisions.
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Skytells Research, Inc. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://www.skytells.io" target="_blank">Website</a>
+                <a href="https://github.com/skytells-research/stock-risk-analyzer" target="_blank">GitHub</a>
+                <a href="https://www.skytells.io/terms" target="_blank">Terms</a>
+                <a href="https://www.skytells.io/privacy" target="_blank">Privacy</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Add your chart initialization code here if needed
+    </script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Risk Analyzer | Skytells Research</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --light-bg: #f3f4f6;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            max-width: 180px;
+            margin-bottom: 1rem;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .analyzer-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .results {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .analytics-item {
+            background: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .analytics-item h3 {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .analytics-item p {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .error {
+            color: #dc2626;
+            background: #fee2e2;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .disclaimer {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            font-size: 0.875rem;
+            color: #92400e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .analyzer-card {
+                padding: 1rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        :root {
+            /* Light theme */
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --button-bg: #000000;
+            --button-text: #ffffff;
+            --border-radius: 8px;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --secondary-color: #60a5fa;
+            --text-color: #f3f4f6;
+            --bg-color: #111827;
+            --card-bg: #1f2937;
+            --border-color: #374151;
+            --button-bg: #ffffff;
+            --button-text: #000000;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .analyzer-card {
+            background: var(--card-bg);
+        }
+
+        button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .light-icon {
+            display: inline-block;
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .dark-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .light-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .dark-icon {
+            display: inline-block;
+            color: #000000;
+        }
+
+        .theme-toggle-btn:hover {
+            opacity: 0.8;
+            background: none !important;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="theme-toggle">
+                <button id="themeToggle" class="theme-toggle-btn">
+                    <i class="fas fa-sun light-icon"></i>
+                    <i class="fas fa-moon dark-icon"></i>
+                </button>
+            </div>
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Skytells Research Logo" class="logo">
+            <h1 class="main-title">Stock Risk Analyzer</h1>
+            <p class="subtitle">Analyze and predict stock risk levels using advanced machine learning</p>
+        </header>
+
+        <div class="analyzer-card">
+            <form id="analyzerForm">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" id="ticker" name="ticker" placeholder="Enter stock ticker (e.g., AAPL)" required>
+                        <button type="submit">
+                            <i class="fas fa-search"></i> Analyze
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Analyzing...
+            </div>
+
+            <div class="error"></div>
+
+            <div class="results">
+                <div class="analytics-grid">
+                    <div class="analytics-item">
+                        <h3>Risk Level</h3>
+                        <p id="riskLevel">-</p>
+                    </div>
+                    <div class="analytics-item">
+                        <h3>Current Price</h3>
+                        <p id="currentPrice">-</p>
+                    </div>
+                    <div class="analytics-item">
+                        <h3>Volatility</h3>
+                        <p id="volatility">-</p>
+                    </div>
+                    <div class="analytics-item">
+                        <h3>Daily Return</h3>
+                        <p id="dailyReturn">-</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This tool is for educational and research purposes only. The analysis provided should not be considered as financial advice. Always conduct your own research and consult with a qualified financial advisor before making investment decisions.
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Skytells Research, Inc. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://www.skytells.io" target="_blank">Website</a>
+                <a href="https://github.com/skytells-research/stock-risk-analyzer" target="_blank">GitHub</a>
+                <a href="https://www.skytells.io/terms" target="_blank">Terms</a>
+                <a href="https://www.skytells.io/privacy" target="_blank">Privacy</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Theme toggle
+            const themeToggle = $('#themeToggle');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // Set initial theme
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            
+            function getChartOptions(theme) {
+                return {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: theme === 'dark' ? '#f3f4f6' : '#1f2937'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: theme === 'dark' ? '#374151' : '#e5e7eb'
+                            },
+                            ticks: {
+                                color: theme === 'dark' ? '#f3f4f6' : '#1f2937'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: theme === 'dark' ? '#374151' : '#e5e7eb'
+                            },
+                            ticks: {
+                                color: theme === 'dark' ? '#f3f4f6' : '#1f2937'
+                            }
+                        }
+                    }
+                };
+            }
+            
+            themeToggle.click(function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Update chart if it exists
+                if (priceChart) {
+                    priceChart.options = getChartOptions(newTheme);
+                    priceChart.update();
+                }
+            });
+
+            // Chart initialization
+            let priceChart;
+
+            $('#analyzerForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const ticker = $('#ticker').val().toUpperCase();
+                $('.error').hide();
+                $('.loading').show();
+                $('.results').hide();
+
+                $.ajax({
+                    url: '/analyze',
+                    method: 'POST',
+                    data: { ticker: ticker },
+                    success: function(response) {
+                        $('.loading').hide();
+                        $('.results').show();
+
+                        // Update analytics
+                        $('#riskLevel').text(response.risk_level);
+                        $('#currentPrice').text('$' + response.current_price);
+                        $('#volatility').text(response.volatility + '%');
+                        $('#dailyReturn').text(response.daily_return + '%');
+
+                        // Add color coding for risk level
+                        const riskColors = {
+                            'Low': '#22c55e',
+                            'Medium': '#f59e0b',
+                            'High': '#dc2626'
+                        };
+                        $('#riskLevel').css('color', riskColors[response.risk_level]);
+
+                        // Update chart
+                        if (priceChart) {
+                            priceChart.destroy();
+                        }
+
+                        const ctx = document.getElementById('priceChart').getContext('2d');
+                        const currentTheme = document.documentElement.getAttribute('data-theme');
+                        
+                        priceChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: response.dates,
+                                datasets: [{
+                                    label: 'Stock Price',
+                                    data: response.prices,
+                                    borderColor: currentTheme === 'dark' ? '#3b82f6' : '#2563eb',
+                                    tension: 0.1
+                                }]
+                            },
+                            options: getChartOptions(currentTheme)
+                        });
+                    },
+                    error: function(xhr) {
+                        $('.loading').hide();
+                        $('.error').show().text(xhr.responseJSON?.error || 'An error occurred. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
