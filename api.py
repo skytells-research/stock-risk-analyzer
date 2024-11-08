@@ -108,10 +108,11 @@ def analyze_stock(ticker):
         
         return jsonify(response)
     except Exception as e:
+        app.logger.error(f"Error analyzing stock {ticker.upper()}: {str(e)}")
         return jsonify({
-            'error': str(e),
+            'error': 'An internal error has occurred. Please try again later.',
             'ticker': ticker.upper()
-        }), 400
+        }), 500
 
 # Health check endpoint
 @app.route('/api/health', methods=['GET'])
