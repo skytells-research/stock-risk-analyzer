@@ -2,9 +2,9 @@
 flask==3.0.2
 numpy==1.26.4
 pandas==2.2.1
-scikit-learn==1.5.0
+scikit-learn==1.3.0
 yfinance==0.2.37
-pandas_ta==0.7.0
+pandas_ta==0.3.14b
 joblib==1.3.2
 
 # Data handling and processing
