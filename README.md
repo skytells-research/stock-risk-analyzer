@@ -1,7 +1,8 @@
 # Stock Risk Analyzer
-🚀 A machine learning-powered tool for analyzing stock market risk levels using technical indicators and historical data.
+Stock Risk Analyzer is a powerful, machine learning-driven application designed to help investors, traders, and financial analysts assess stock market risk levels efficiently and accurately. By leveraging historical data and key technical indicators, this tool classifies stocks into risk categories (`Low`, `Medium`, `High`), empowering users to make informed investment decisions.
 
-![Stock Risk Analyzer](https://github.com/skytells-research/stock-risk-analyzer/blob/main/static/banner.jpg)
+
+![Stock Risk Analyzer](https://raw.githubusercontent.com/skytells-research/stock-risk-analyzer/refs/heads/main/static/assets/banner.jpg)
 
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -67,9 +68,9 @@
 The risk level is determined using the LightGBM Classifier with the following methodology:
 
 1. **Risk Score Calculation** ($\alpha$):
-   ```latex
-   \alpha = w_1\sigma + w_2|R_t| + w_3\left|\frac{P_t - MA_{50}}{MA_{50}}\right| + w_4\left|\frac{P_t - MA_{200}}{MA_{200}}\right|
-   ```
+   
+   $$\alpha = w_1\sigma + w_2|R_t| + w_3\left|\frac{P_t - MA_{50}}{MA_{50}}\right| + w_4\left|\frac{P_t - MA_{200}}{MA_{200}}\right|$$
+   
    where $w_i$ are the learned weights
 
 2. **Risk Categories**:
