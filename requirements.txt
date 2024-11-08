@@ -18,7 +18,7 @@ urllib3==2.2.2
 
 # Development and testing
 pytest==8.0.2
-black==24.2.0
+black==24.3.0
 flake8==7.0.0
 
 # Optional - for Jupyter notebooks
