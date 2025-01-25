@@ -1,0 +1,20 @@
+version: 1.0.0
+name: stock-risk-analyzer
+services:
+  stock-risk-analyzer:
+    build: .
+    container_name: stock-risk-analyzer
+    ports:
+      - "3001:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - SECRET_KEY=your-secret-key-change-in-production
+    volumes:
+      - ./models:/app/models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://stock-risk-analyzer:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
