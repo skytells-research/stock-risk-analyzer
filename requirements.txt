@@ -27,3 +27,6 @@ ipykernel==6.29.3
 
 # Production deployment
 gunicorn==22.0.0
+
+# AI query interface
+anthropic>=0.40.0

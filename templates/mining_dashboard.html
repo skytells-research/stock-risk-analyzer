@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CommodAI-Tee: Mining Analysis Dashboard</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        .nav-link {
+            position: fixed; top: 10px; left: 10px; z-index: 1000;
+            background: #fff; color: #1a237e; padding: 8px 16px;
+            border-radius: 4px; text-decoration: none; font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: Arial, sans-serif;
+        }
+        .nav-link:hover { background: #f0f2f5; }
+    </style>
+</head>
+<body>
+    <a href="/" class="nav-link">← Back to Stock Analyzer</a>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const S = {
+            dashboard:    { fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f2f5', display: 'flex', flexDirection: 'column', height: '100vh' },
+            header:       { backgroundColor: '#1a237e', color: 'white', padding: '10px 20px', fontSize: '24px', fontWeight: 'bold' },
+            main:         { display: 'flex', flex: 1, padding: '10px', overflow: 'hidden' },
+            leftCol:      { flex: 3, display: 'flex', flexDirection: 'column', paddingRight: '10px', overflowY: 'auto' },
+            rightCol:     { flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+            widget:       { backgroundColor: '#fff', border: '1px solid #ddd', borderRadius: '8px', padding: '15px', marginBottom: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' },
+            widgetTitle:  { fontSize: '18px', fontWeight: 'bold', borderBottom: '2px solid #1a237e', paddingBottom: '5px', marginBottom: '10px' },
+            table:        { width: '100%', borderCollapse: 'collapse' },
+            th:           { border: '1px solid #ddd', padding: '8px', backgroundColor: '#f4f4f4', textAlign: 'left' },
+            td:           { border: '1px solid #ddd', padding: '8px' },
+            listItem:     { padding: '5px 0', borderBottom: '1px solid #eee' },
+            queryBox:     { display: 'flex', flexDirection: 'column' },
+            queryInput:   { padding: '8px', border: '1px solid #ccc', borderRadius: '4px', marginBottom: '5px' },
+            queryButton:  { padding: '8px', backgroundColor: '#1a237e', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
+            queryResp:    { marginTop: '10px', backgroundColor: '#f9f9f9', border: '1px solid #eee', padding: '10px', whiteSpace: 'pre-wrap', fontFamily: 'monospace', maxHeight: '200px', overflowY: 'auto' },
+            loading:      { color: '#888', fontStyle: 'italic', padding: '8px 0' },
+            error:        { color: 'red', padding: '8px 0' },
+        };
+
+        function Widget({ title, children }) {
+            return (
+                <div style={S.widget}>
+                    <div style={S.widgetTitle}>{title}</div>
+                    {children}
+                </div>
+            );
+        }
+
+        function useFetch(url) {
+            const [data, setData]       = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [error, setError]     = useState(null);
+            useEffect(() => {
+                fetch(url)
+                    .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+                    .then(d => { setData(d); setLoading(false); })
+                    .catch(e => { setError(e.message); setLoading(false); });
+            }, [url]);
+            return { data, loading, error };
+        }
+
+        // ── Widgets ──────────────────────────────────────────────────────────
+
+        function PortfolioWidget() {
+            const { data, loading, error } = useFetch('/api/mining/portfolio');
+            return (
+                <Widget title="Portfolio Monitor">
+                    {loading && <div style={S.loading}>Loading portfolio…</div>}
+                    {error   && <div style={S.error}>Error: {error}</div>}
+                    {data && (
+                        <table style={S.table}>
+                            <thead>
+                                <tr>
+                                    {['Ticker','Company','Region','Price','Change','Compliance'].map(h =>
+                                        <th key={h} style={S.th}>{h}</th>
+                                    )}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map(co => (
+                                    <tr key={co.id}>
+                                        <td style={S.td}>{co.ticker}</td>
+                                        <td style={S.td}>{co.name}</td>
+                                        <td style={S.td}>{co.region}</td>
+                                        <td style={S.td}>{co.price !== 'N/A' ? `$${co.price}` : 'N/A'}</td>
+                                        <td style={{...S.td, color: String(co.change).startsWith('+') ? 'green' : co.change === 'N/A' ? '#888' : 'red'}}>{co.change}</td>
+                                        <td style={{...S.td, color: co.compliance === 'WARN' ? 'orange' : 'green'}}>{co.compliance}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </Widget>
+            );
+        }
+
+        function ComplianceWidget() {
+            const { data, loading, error } = useFetch('/api/mining/compliance');
+            return (
+                <Widget title="ESG Compliance (NPDES · SWPPP · TRI)">
+                    {loading && <div style={S.loading}>Loading compliance data…</div>}
+                    {error   && <div style={S.error}>Error: {error}</div>}
+                    {data && data.map(item => (
+                        <div key={item.id} style={{...S.listItem, color: item.status === 'ALERT' ? 'red' : item.status === 'WARN' ? 'orange' : 'black'}}>
+                            <strong>{item.status}:</strong> {item.company} — {item.type} ({item.details})
+                            {item.deadline !== 'N/A' && <span> | <strong>Deadline: {item.deadline}</strong></span>}
+                        </div>
+                    ))}
+                </Widget>
+            );
+        }
+
+        function QueryWidget() {
+            const [query, setQuery]         = useState('');
+            const [response, setResponse]   = useState('');
+            const [loading, setLoading]     = useState(false);
+            const [error, setError]         = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!query.trim()) return;
+                setLoading(true); setError(''); setResponse('');
+                fetch('/api/mining/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query }),
+                })
+                .then(r => r.json())
+                .then(d => {
+                    setLoading(false);
+                    if (d.error) setError(d.error);
+                    else setResponse(d.response);
+                })
+                .catch(e => { setLoading(false); setError(e.message); });
+            };
+
+            return (
+                <Widget title="Query CommodAI-Tee">
+                    <form onSubmit={handleSubmit} style={S.queryBox}>
+                        <input
+                            type="text"
+                            style={S.queryInput}
+                            placeholder="e.g., 'Analyze AISC trends for US gold producers' or 'NPDES status for portfolio'"
+                            value={query}
+                            onChange={e => setQuery(e.target.value)}
+                        />
+                        <button type="submit" style={S.queryButton} disabled={loading}>
+                            {loading ? 'Analyzing…' : 'Analyze'}
+                        </button>
+                    </form>
+                    {error    && <div style={S.error}>{error}</div>}
+                    {response && <div style={S.queryResp}>{response}</div>}
+                </Widget>
+            );
+        }
+
+        function MarketWidget() {
+            const { data, loading, error } = useFetch('/api/mining/market');
+            return (
+                <Widget title="Market Watch (Live)">
+                    {loading && <div style={S.loading}>Loading prices…</div>}
+                    {error   && <div style={S.error}>Error: {error}</div>}
+                    {data && Object.entries(data).map(([name, val]) => {
+                        const pctNum = parseFloat(String(val.change).replace('+',''));
+                        return (
+                            <div key={name} style={{...S.listItem, color: val.alert === 'high-trigger' ? 'red' : 'black'}}>
+                                <strong style={{textTransform:'capitalize'}}>{name}:</strong>{' '}
+                                {val.price !== 'N/A' ? `$${Number(val.price).toLocaleString()}` : 'N/A'}
+                                {val.change !== 'N/A' && (
+                                    <span style={{color: pctNum >= 0 ? 'green' : 'red', marginLeft: '10px'}}>({val.change})</span>
+                                )}
+                            </div>
+                        );
+                    })}
+                </Widget>
+            );
+        }
+
+        function NewsWidget() {
+            const { data, loading, error } = useFetch('/api/mining/news');
+            return (
+                <>
+                    <Widget title="Breaking News & Intel">
+                        {loading && <div style={S.loading}>Loading news…</div>}
+                        {error   && <div style={S.error}>Error: {error}</div>}
+                        {data && data.news.map(item => (
+                            <div key={item.id} style={S.listItem}>
+                                {item.headline}
+                                <span style={{color:'#888', fontSize:'12px', marginLeft:'8px'}}>— {item.source}</span>
+                            </div>
+                        ))}
+                    </Widget>
+                    <Widget title="Industry Calendar">
+                        {data && data.events.map(item => (
+                            <div key={item.id} style={S.listItem}>
+                                <strong>{item.name}</strong> ({item.date}) — {item.location}
+                            </div>
+                        ))}
+                    </Widget>
+                </>
+            );
+        }
+
+        // ── App ──────────────────────────────────────────────────────────────
+
+        function Dashboard() {
+            return (
+                <div style={S.dashboard}>
+                    <div style={S.header}>CommodAI-Tee: Mining Analysis Dashboard</div>
+                    <div style={S.main}>
+                        <div style={S.leftCol}>
+                            <PortfolioWidget />
+                            <ComplianceWidget />
+                            <QueryWidget />
+                        </div>
+                        <div style={S.rightCol}>
+                            <MarketWidget />
+                            <NewsWidget />
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<Dashboard />);
+    </script>
+</body>
+</html>
