@@ -1,5 +1,5 @@
 import numpy as np
-import pandas_ta as ta
+import fin_primitives.pandas  # noqa: F401  registers df.fp (pandas-ta method names)
 
 def add_features(df):
     """
@@ -11,12 +11,12 @@ def add_features(df):
     df['MA50'] = df['Close'].rolling(window=50).mean()
     df['MA200'] = df['Close'].rolling(window=200).mean()
     
-    # Additional technical indicators using pandas_ta
-    df['RSI'] = df.ta.rsi(length=14)
-    df['MACD'] = df.ta.macd(fast=12, slow=26, signal=9)['MACD_12_26_9']
+    # Additional technical indicators using fin-primitives
+    df['RSI'] = df.fp.rsi(length=14)
+    df['MACD'] = df.fp.macd(fast=12, slow=26, signal=9)['MACD_12_26_9']
     
     # Correct way to calculate Bollinger Bands
-    bb_bands = df.ta.bbands(close=df['Close'], length=20)
+    bb_bands = df.fp.bbands(close=df['Close'], length=20)
     df['BB_upper'] = bb_bands['BBU_20_2.0']
     df['BB_middle'] = bb_bands['BBM_20_2.0']
     df['BB_lower'] = bb_bands['BBL_20_2.0']
